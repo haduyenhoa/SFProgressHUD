@@ -36,8 +36,9 @@ public class SFProgressHUD : UIView {
     dynamic var customView : UIView?
     dynamic var indicator : UIView?
     dynamic var progress : Float = 0.0
+    var effectView = SFEffectView()
     var color : UIColor?
-    var opacity : CGFloat = 0.8
+    var opacity : CGFloat = 0.9
     var xOffset : CGFloat = 0.0
     var yOffset : CGFloat = 0.0
     var margin : CGFloat = 20.0
@@ -212,6 +213,7 @@ public class SFProgressHUD : UIView {
         self.taskInProgress = false
         self.rotationTransform = CGAffineTransformIdentity
         
+        addSubview(effectView)
         self.addSubview(label)
         self.addSubview(detailsLabel)
         
@@ -342,24 +344,30 @@ public class SFProgressHUD : UIView {
             //Gradient center
             let gradCenter = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2);
             //Gradient radius
-            let gradRadius = min(self.bounds.size.width , self.bounds.size.height) ;
+            let gradRadius = min(self.bounds.size.width , self.bounds.size.height)
             //Gradient draw
             CGContextDrawRadialGradient(context, gradient, gradCenter, 0, gradCenter, gradRadius, .DrawsAfterEndLocation)
         }
         
         // Set background rect color
         if let color = color {
-            CGContextSetFillColorWithColor(context, color.CGColor);
+            CGContextSetFillColorWithColor(context, color.CGColor)
         } else {
-            CGContextSetGrayFillColor(context, 0.0, opacity);
+            CGContextSetGrayFillColor(context, 0.0, opacity)
         }
         
         // Center HUD
         let allRect = self.bounds
         // Draw rounded HUD backgroud rect
-        let boxRect = CGRectMake(round((allRect.size.width - size.width) / 2) + self.xOffset,
+        var boxRect = CGRectMake(round((allRect.size.width - size.width) / 2) + self.xOffset,
             round((allRect.size.height - size.height) / 2) + self.yOffset, size.width, size.height)
+        boxRect = CGRectIntegral(boxRect)
         let radius = self.cornerRadius
+        
+        effectView.bounds = boxRect
+        effectView.center = self.center
+        effectView.layer.cornerRadius = radius
+        
         CGContextBeginPath(context)
         CGContextMoveToPoint(context, CGRectGetMinX(boxRect) + radius, CGRectGetMinY(boxRect))
         CGContextAddArc(context, CGRectGetMaxX(boxRect) - radius, CGRectGetMinY(boxRect) + radius, radius, CGFloat(3 * M_PI / 2), 0, 0)
@@ -533,13 +541,13 @@ public class SFProgressHUD : UIView {
 
 /// Provides the general look and feel of the APPLE HUD,
 /// into which the eventual content is inserted.
-class SFHUDView: UIVisualEffectView {
+public class SFEffectView : UIVisualEffectView {
     init() {
         super.init(effect: UIBlurEffect(style: .Light))
         commonInit()
     }
-    
-    required init?(coder aDecoder: NSCoder) {
+        
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
     }
