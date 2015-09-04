@@ -1,0 +1,33 @@
+{
+  'version': 0,
+  'case-sensitive': 'false',
+  'roots': [
+    {
+      'type': 'directory',
+      'name': "/Users/mac/Desktop/SFProgress/DerivedData/SFProgress/Build/Products/Debug-iphonesimulator/SFProgress.framework/Headers",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "SFProgress-Swift.h",
+          'external-contents': "/Users/mac/Desktop/SFProgress/DerivedData/SFProgress/Build/Products/Debug-iphonesimulator/SFProgress.framework/Headers/SFProgress-Swift.h"
+        },
+        {
+          'type': 'file',
+          'name': "SFProgress.h",
+          'external-contents': "/Users/mac/Desktop/SFProgress/SFProgress/SFProgress.h"
+        }
+      ]
+    },
+    {
+      'type': 'directory',
+      'name': "/Users/mac/Desktop/SFProgress/DerivedData/SFProgress/Build/Products/Debug-iphonesimulator/SFProgress.framework/Modules",
+      'contents': [
+        {
+          'type': 'file',
+          'name': "module.modulemap",
+          'external-contents': "/Users/mac/Desktop/SFProgress/DerivedData/SFProgress/Build/Intermediates/SFProgress.build/Debug-iphonesimulator/SFProgress.build/module.modulemap"
+        }
+      ]
+    }
+  ]
+}
