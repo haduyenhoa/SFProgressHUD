@@ -18,7 +18,7 @@ class MasterViewController: UITableViewController {
         "Detarminate model",
         "Annular width detarminate model",
         "Mode switching",
-        "On wwindow",
+        "On window",
         "NSURLConnection",
         "Dim background",
         "Text only",
