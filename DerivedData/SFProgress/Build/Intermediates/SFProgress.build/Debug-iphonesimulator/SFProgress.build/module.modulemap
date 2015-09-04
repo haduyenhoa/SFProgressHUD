@@ -1,6 +1,0 @@
-framework module SFProgress {
-  umbrella header "SFProgress.h"
-
-  export *
-  module * { export * }
-}

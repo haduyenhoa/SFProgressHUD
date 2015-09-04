@@ -1,15 +1,16 @@
 Pod::Spec.new do |s|
-  s.name             = "SFProgress"
-  s.version          = "0.0.2"
-  s.summary          = "MBProgressHUD with swift"
-  s.homepage         = "https://github.com/looseyi/SFProgressHUD.git"
-  s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { "Edmond" => "chun574271939@gmail.com" }
-  s.source           = { :git => "https://github.com/looseyi/SFProgressHUD.git", :tag => s.version }
-  s.social_media_url = 'https://twitter.com/looseyi'
+  s.name             = 'SFProgressHUD'
+  s.version          = '0.0.2'
+  s.summary      = "SFProgress, MBProgress by swift 2.0"
+  s.homepage     = 'https://github.com/looseyi/SFProgressHUD.git'
+  s.license      = 'MIT'
+  s.author             = { 'looseyi' => '13615033587@126.com' }
+  s.social_media_url   = 'http://twitter.com/looseyi'
 
   s.platform     = :ios, '8.0'
-  s.source_files = '*.swfit'
+  s.source       = { :git => "https://github.com/looseyi/SFProgressHUD.git", :tag => s.version }
+  s.source_files = 'source/*.swift'
+  s.exclude_files = "Classes/Demo"
   s.framework    = "CoreGraphics"
   s.requires_arc = true
 end
