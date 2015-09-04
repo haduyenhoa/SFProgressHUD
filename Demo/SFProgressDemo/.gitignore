@@ -1,9 +1,7 @@
-<<<<<<< HEAD
-DerivedData/
-*.xcodeproj/xcuserdata/
-=======
 # Xcode
 #
+DerivedData/
+*.xcodeproj/xcuserdata/
 build/
 *.pbxuser
 !default.pbxuser
@@ -35,4 +33,3 @@ DerivedData
 # Carthage/Checkouts
 
 Carthage/Build
->>>>>>> 8f91098... Initial commit
