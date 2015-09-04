@@ -1,0 +1,16 @@
+# Uncomment this line to define a global platform for your project
+platform :ios, '8.0'
+use_frameworks!
+
+target 'Demo' do
+  pod 'SFProgressHUD', :git => 'https://github.com/looseyi/SFProgressHUD.git'
+end
+
+target 'DemoTests' do
+
+end
+
+target 'DemoUITests' do
+
+end
+

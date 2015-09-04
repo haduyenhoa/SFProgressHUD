@@ -7,9 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		85EC2A001B998B6F007F474A /* SFProgress.h in Headers */ = {isa = PBXBuildFile; fileRef = 85EC29FF1B998B6F007F474A /* SFProgress.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		85EC2A071B998B6F007F474A /* SFProgress.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85EC29FC1B998B6F007F474A /* SFProgress.framework */; settings = {ASSET_TAGS = (); }; };
-		85EC2A0C1B998B6F007F474A /* SFProgressTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85EC2A0B1B998B6F007F474A /* SFProgressTests.swift */; };
+		85EC2A001B998B6F007F474A /* SFProgressHUD.h in Headers */ = {isa = PBXBuildFile; fileRef = 85EC29FF1B998B6F007F474A /* SFProgressHUD.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		85EC2A071B998B6F007F474A /* SFProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85EC29FC1B998B6F007F474A /* SFProgressHUD.framework */; settings = {ASSET_TAGS = (); }; };
+		85EC2A0C1B998B6F007F474A /* SFProgressHUDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85EC2A0B1B998B6F007F474A /* SFProgressHUDTests.swift */; };
+		85F470731B9A02B200CB481C /* SFProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F470721B9A02B200CB481C /* SFProgressHUD.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -23,12 +24,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		85EC29FC1B998B6F007F474A /* SFProgress.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SFProgress.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		85EC29FF1B998B6F007F474A /* SFProgress.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFProgress.h; sourceTree = "<group>"; };
+		85EC29FC1B998B6F007F474A /* SFProgressHUD.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SFProgressHUD.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		85EC29FF1B998B6F007F474A /* SFProgressHUD.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFProgressHUD.h; sourceTree = "<group>"; };
 		85EC2A011B998B6F007F474A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		85EC2A061B998B6F007F474A /* SFProgressTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SFProgressTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		85EC2A0B1B998B6F007F474A /* SFProgressTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFProgressTests.swift; sourceTree = "<group>"; };
+		85EC2A061B998B6F007F474A /* SFProgressHUD.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SFProgressHUD.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		85EC2A0B1B998B6F007F474A /* SFProgressHUDTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFProgressHUDTests.swift; sourceTree = "<group>"; };
 		85EC2A0D1B998B6F007F474A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		85F470721B9A02B200CB481C /* SFProgressHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SFProgressHUD.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,7 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				85EC2A071B998B6F007F474A /* SFProgress.framework in Frameworks */,
+				85EC2A071B998B6F007F474A /* SFProgressHUD.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,6 +55,7 @@
 		85EC29F21B998B6F007F474A = {
 			isa = PBXGroup;
 			children = (
+				85F470711B9A02B200CB481C /* source */,
 				85EC29FE1B998B6F007F474A /* SFProgress */,
 				85EC2A0A1B998B6F007F474A /* SFProgressTests */,
 				85EC29FD1B998B6F007F474A /* Products */,
@@ -62,8 +65,8 @@
 		85EC29FD1B998B6F007F474A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				85EC29FC1B998B6F007F474A /* SFProgress.framework */,
-				85EC2A061B998B6F007F474A /* SFProgressTests.xctest */,
+				85EC29FC1B998B6F007F474A /* SFProgressHUD.framework */,
+				85EC2A061B998B6F007F474A /* SFProgressHUD.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -71,7 +74,7 @@
 		85EC29FE1B998B6F007F474A /* SFProgress */ = {
 			isa = PBXGroup;
 			children = (
-				85EC29FF1B998B6F007F474A /* SFProgress.h */,
+				85EC29FF1B998B6F007F474A /* SFProgressHUD.h */,
 				85EC2A011B998B6F007F474A /* Info.plist */,
 			);
 			path = SFProgress;
@@ -80,10 +83,18 @@
 		85EC2A0A1B998B6F007F474A /* SFProgressTests */ = {
 			isa = PBXGroup;
 			children = (
-				85EC2A0B1B998B6F007F474A /* SFProgressTests.swift */,
+				85EC2A0B1B998B6F007F474A /* SFProgressHUDTests.swift */,
 				85EC2A0D1B998B6F007F474A /* Info.plist */,
 			);
 			path = SFProgressTests;
+			sourceTree = "<group>";
+		};
+		85F470711B9A02B200CB481C /* source */ = {
+			isa = PBXGroup;
+			children = (
+				85F470721B9A02B200CB481C /* SFProgressHUD.swift */,
+			);
+			path = source;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -93,16 +104,16 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				85EC2A001B998B6F007F474A /* SFProgress.h in Headers */,
+				85EC2A001B998B6F007F474A /* SFProgressHUD.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		85EC29FB1B998B6F007F474A /* SFProgress */ = {
+		85EC29FB1B998B6F007F474A /* SFProgressHUD */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 85EC2A101B998B6F007F474A /* Build configuration list for PBXNativeTarget "SFProgress" */;
+			buildConfigurationList = 85EC2A101B998B6F007F474A /* Build configuration list for PBXNativeTarget "SFProgressHUD" */;
 			buildPhases = (
 				85EC29F71B998B6F007F474A /* Sources */,
 				85EC29F81B998B6F007F474A /* Frameworks */,
@@ -113,14 +124,14 @@
 			);
 			dependencies = (
 			);
-			name = SFProgress;
+			name = SFProgressHUD;
 			productName = SFProgress;
-			productReference = 85EC29FC1B998B6F007F474A /* SFProgress.framework */;
+			productReference = 85EC29FC1B998B6F007F474A /* SFProgressHUD.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		85EC2A051B998B6F007F474A /* SFProgressTests */ = {
+		85EC2A051B998B6F007F474A /* SFProgressHUDTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 85EC2A131B998B6F007F474A /* Build configuration list for PBXNativeTarget "SFProgressTests" */;
+			buildConfigurationList = 85EC2A131B998B6F007F474A /* Build configuration list for PBXNativeTarget "SFProgressHUDTests" */;
 			buildPhases = (
 				85EC2A021B998B6F007F474A /* Sources */,
 				85EC2A031B998B6F007F474A /* Frameworks */,
@@ -131,9 +142,9 @@
 			dependencies = (
 				85EC2A091B998B6F007F474A /* PBXTargetDependency */,
 			);
-			name = SFProgressTests;
+			name = SFProgressHUDTests;
 			productName = SFProgressTests;
-			productReference = 85EC2A061B998B6F007F474A /* SFProgressTests.xctest */;
+			productReference = 85EC2A061B998B6F007F474A /* SFProgressHUD.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -153,7 +164,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 85EC29F61B998B6F007F474A /* Build configuration list for PBXProject "SFProgress" */;
+			buildConfigurationList = 85EC29F61B998B6F007F474A /* Build configuration list for PBXProject "SFProgressHUD" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -165,8 +176,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				85EC29FB1B998B6F007F474A /* SFProgress */,
-				85EC2A051B998B6F007F474A /* SFProgressTests */,
+				85EC29FB1B998B6F007F474A /* SFProgressHUD */,
+				85EC2A051B998B6F007F474A /* SFProgressHUDTests */,
 			);
 		};
 /* End PBXProject section */
@@ -193,6 +204,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85F470731B9A02B200CB481C /* SFProgressHUD.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,7 +212,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				85EC2A0C1B998B6F007F474A /* SFProgressTests.swift in Sources */,
+				85EC2A0C1B998B6F007F474A /* SFProgressHUDTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -209,7 +221,7 @@
 /* Begin PBXTargetDependency section */
 		85EC2A091B998B6F007F474A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 85EC29FB1B998B6F007F474A /* SFProgress */;
+			target = 85EC29FB1B998B6F007F474A /* SFProgressHUD */;
 			targetProxy = 85EC2A081B998B6F007F474A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -315,7 +327,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.xueqiu.fund.SFProgress;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = SFProgressHUD;
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -331,7 +343,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.xueqiu.fund.SFProgress;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = SFProgressHUD;
 				SKIP_INSTALL = YES;
 			};
 			name = Release;
@@ -342,7 +354,7 @@
 				INFOPLIST_FILE = SFProgressTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.xueqiu.fund.SFProgressTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = SFProgressHUD;
 			};
 			name = Debug;
 		};
@@ -352,14 +364,14 @@
 				INFOPLIST_FILE = SFProgressTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.xueqiu.fund.SFProgressTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = SFProgressHUD;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		85EC29F61B998B6F007F474A /* Build configuration list for PBXProject "SFProgress" */ = {
+		85EC29F61B998B6F007F474A /* Build configuration list for PBXProject "SFProgressHUD" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				85EC2A0E1B998B6F007F474A /* Debug */,
@@ -368,21 +380,23 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		85EC2A101B998B6F007F474A /* Build configuration list for PBXNativeTarget "SFProgress" */ = {
+		85EC2A101B998B6F007F474A /* Build configuration list for PBXNativeTarget "SFProgressHUD" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				85EC2A111B998B6F007F474A /* Debug */,
 				85EC2A121B998B6F007F474A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
-		85EC2A131B998B6F007F474A /* Build configuration list for PBXNativeTarget "SFProgressTests" */ = {
+		85EC2A131B998B6F007F474A /* Build configuration list for PBXNativeTarget "SFProgressHUDTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				85EC2A141B998B6F007F474A /* Debug */,
 				85EC2A151B998B6F007F474A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

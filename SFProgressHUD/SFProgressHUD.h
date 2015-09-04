@@ -1,5 +1,5 @@
 //
-//  SFProgress.h
+//  SFProgressHUD
 //  SFProgress
 //
 //  Created by Edmond on 9/4/15.
