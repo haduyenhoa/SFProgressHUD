@@ -15,6 +15,8 @@
 		85F470051B9999AA00CB481C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 85F470031B9999AA00CB481C /* LaunchScreen.storyboard */; };
 		85F470101B9999AA00CB481C /* SFProgressDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F4700F1B9999AA00CB481C /* SFProgressDemoTests.swift */; };
 		85F4701B1B9999AA00CB481C /* SFProgressDemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F4701A1B9999AA00CB481C /* SFProgressDemoUITests.swift */; };
+		85F4702A1B999E0700CB481C /* SFProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F470291B999E0700CB481C /* SFProgressHUD.swift */; settings = {ASSET_TAGS = (); }; };
+		85F4702C1B99A07C00CB481C /* 37x-Checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = 85F4702B1B99A07C00CB481C /* 37x-Checkmark.png */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +51,8 @@
 		85F470161B9999AA00CB481C /* SFProgressDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SFProgressDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		85F4701A1B9999AA00CB481C /* SFProgressDemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFProgressDemoUITests.swift; sourceTree = "<group>"; };
 		85F4701C1B9999AA00CB481C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		85F470291B999E0700CB481C /* SFProgressHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SFProgressHUD.swift; sourceTree = "<group>"; };
+		85F4702B1B99A07C00CB481C /* 37x-Checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "37x-Checkmark.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +103,8 @@
 		85F46FF71B9999AA00CB481C /* SFProgressDemo */ = {
 			isa = PBXGroup;
 			children = (
+				85F4702B1B99A07C00CB481C /* 37x-Checkmark.png */,
+				85F470281B999E0700CB481C /* source */,
 				85F46FF81B9999AA00CB481C /* AppDelegate.swift */,
 				85F46FFA1B9999AA00CB481C /* MasterViewController.swift */,
 				85F46FFC1B9999AA00CB481C /* DetailViewController.swift */,
@@ -126,6 +132,15 @@
 				85F4701C1B9999AA00CB481C /* Info.plist */,
 			);
 			path = SFProgressDemoUITests;
+			sourceTree = "<group>";
+		};
+		85F470281B999E0700CB481C /* source */ = {
+			isa = PBXGroup;
+			children = (
+				85F470291B999E0700CB481C /* SFProgressHUD.swift */,
+			);
+			name = source;
+			path = ../../../source;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -231,6 +246,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85F4702C1B99A07C00CB481C /* 37x-Checkmark.png in Resources */,
 				85F470051B9999AA00CB481C /* LaunchScreen.storyboard in Resources */,
 				85F470021B9999AA00CB481C /* Assets.xcassets in Resources */,
 				85F470001B9999AA00CB481C /* Main.storyboard in Resources */,
@@ -259,6 +275,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				85F46FFD1B9999AA00CB481C /* DetailViewController.swift in Sources */,
+				85F4702A1B999E0700CB481C /* SFProgressHUD.swift in Sources */,
 				85F46FFB1B9999AA00CB481C /* MasterViewController.swift in Sources */,
 				85F46FF91B9999AA00CB481C /* AppDelegate.swift in Sources */,
 			);
@@ -487,6 +504,7 @@
 				85F470211B9999AA00CB481C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		85F470221B9999AA00CB481C /* Build configuration list for PBXNativeTarget "SFProgressDemoTests" */ = {
 			isa = XCConfigurationList;
@@ -495,6 +513,7 @@
 				85F470241B9999AA00CB481C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		85F470251B9999AA00CB481C /* Build configuration list for PBXNativeTarget "SFProgressDemoUITests" */ = {
 			isa = XCConfigurationList;
@@ -503,6 +522,7 @@
 				85F470271B9999AA00CB481C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
