@@ -32,10 +32,10 @@ let kPadding : CGFloat = 4.0
 
 public class SFProgressHUD : UIView {
     
-    
-    var mode : SFProgressHUDMode = .Indeterminate
-    var customView : UIView?
-    var indicator : UIView?
+    dynamic var mode : SFProgressHUDMode = .Indeterminate
+    dynamic var customView : UIView?
+    dynamic var indicator : UIView?
+    dynamic var progress : Float = 0.0
     var color : UIColor?
     var opacity : CGFloat = 0.8
     var xOffset : CGFloat = 0.0
@@ -44,7 +44,6 @@ public class SFProgressHUD : UIView {
     var cornerRadius : CGFloat = 10.0
     var graceTime : Float = 0.0
     var minShowTime : NSTimeInterval = 0.0
-    var progress : Double = 0.0
     var minSize : CGSize = CGSizeZero
     var size : CGSize = CGSizeZero
     var square : Bool = false
@@ -216,6 +215,7 @@ public class SFProgressHUD : UIView {
         self.addSubview(label)
         self.addSubview(detailsLabel)
         
+        _sf_updateIndicator()
         _sf_registeNotifications()
         _sf_registerForKVO()
     }
@@ -260,7 +260,7 @@ public class SFProgressHUD : UIView {
         
         var labelSize = _sf_textSize(label.text, font:label.font)
         labelSize.width = min(labelSize.width, maxWidth)
-        totalSize.width = min(totalSize.width, labelSize.width)
+        totalSize.width = max(totalSize.width, labelSize.width)
         totalSize.height += labelSize.height
         if (labelSize.height > 0.0 && indicatorF.size.height > 0.0) {
             totalSize.height += kPadding
@@ -446,12 +446,13 @@ public class SFProgressHUD : UIView {
         if (mode == .Indeterminate) {
             if (!isActivityIndicator) {
                 // Update to indeterminate indicator
-                if indicator != nil {
-                    indicator!.removeFromSuperview()
+                if indicator == nil {
                     indicator = UIActivityIndicatorView(activityIndicatorStyle:.WhiteLarge)
-                    (indicator as! UIActivityIndicatorView).startAnimating()
-                    self.addSubview(indicator!)
+                } else {
+                    indicator!.removeFromSuperview()
                 }
+                (indicator as! UIActivityIndicatorView).startAnimating()
+                self.addSubview(indicator!)
             }
         } else if (mode == .Determinate || mode == .AnnularDeterminate) {
             if (!isRoundIndicator) {
@@ -467,9 +468,11 @@ public class SFProgressHUD : UIView {
         }
         else if (mode == .CustomView && customView != indicator) {
             // Update custom view indicator
-            indicator!.removeFromSuperview()
-            indicator = customView
-            self.addSubview(indicator!)
+            if let customView = customView {
+                indicator!.removeFromSuperview()
+                indicator = customView
+                self.addSubview(indicator!)
+            }
         } else if (mode == .Text) {
             indicator!.removeFromSuperview()
             indicator = nil
@@ -514,7 +517,7 @@ public class SFProgressHUD : UIView {
         return detailsLabel
         }()
     
-    public enum SFProgressHUDMode {
+    @objc public enum SFProgressHUDMode : NSInteger {
         /** Progress is shown using an UIActivityIndicatorView. This is the default. */
         case Indeterminate
         /** Progress is shown using a round, pie-chart like, progress view. */
@@ -582,16 +585,32 @@ class SFHUDView: UIVisualEffectView {
 }
 
 class SFRoundProgressView : UIView {
-    var progress : Double = 0.0
-    var progressTintColor : UIColor?
-    var backgroundTintColor : UIColor?
-    var annular : Bool = false
+    dynamic var progress : Float = 0.0
+    dynamic var progressTintColor = UIColor(white:0.5, alpha:1.0)
+    dynamic var backgroundTintColor = UIColor(white:1.0, alpha:1.0)
+    dynamic var annular : Bool = false
+    
+    convenience init() {
+        self.init(frame:CGRectMake(0, 0, 37, 37))
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame:frame)
+        self.backgroundColor = UIColor.clearColor()
+        self.opaque = false
+        _sf_registerForKVO()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder:aDecoder)
+    }
     
     override func drawRect(rect: CGRect) {
-        let allRect = self.bounds;
-        let circleRect = CGRectInset(allRect, 2.0, 2.0);
-        let context = UIGraphicsGetCurrentContext();
+        let allRect = self.bounds
+        let circleRect = CGRectInset(allRect, 2.0, 2.0)
+        let context = UIGraphicsGetCurrentContext()
         
+        let pi = Float(M_PI)
         if (annular) {
             // Draw background
             let  lineWidth: CGFloat = 2.0
@@ -600,32 +619,32 @@ class SFRoundProgressView : UIView {
             processBackgroundPath.lineCapStyle = .Butt
             let center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2)
             let radius = (self.bounds.size.width - lineWidth)/2
-            let startAngle = -(M_PI / 2) // 90 degrees
-            var endAngle =  2 * M_PI + startAngle
+            let startAngle = -(pi / 2) // 90 degrees
+            var endAngle =  2 * pi + startAngle
             processBackgroundPath.addArcWithCenter(center, radius:radius, startAngle:CGFloat(startAngle), endAngle:CGFloat(endAngle), clockwise: true)
-            backgroundTintColor?.set()
+            backgroundTintColor.set()
             processBackgroundPath.stroke()
             // Draw progress
             let processPath = UIBezierPath()
             processPath.lineCapStyle = .Square
             processPath.lineWidth = lineWidth
-            endAngle = self.progress * 2 * M_PI + startAngle
+            endAngle = progress * 2 * pi + startAngle
             processPath.addArcWithCenter(center, radius:radius, startAngle:CGFloat(startAngle), endAngle:CGFloat(endAngle), clockwise: true)
-            progressTintColor?.set()
+            progressTintColor.set()
             processPath.stroke()
         } else {
             // Draw background
-            progressTintColor?.setStroke()
-            backgroundTintColor?.setFill()
+            progressTintColor.setStroke()
+            backgroundTintColor.setFill()
             CGContextSetLineWidth(context, 2.0)
             CGContextFillEllipseInRect(context, circleRect)
             CGContextStrokeEllipseInRect(context, circleRect)
             // Draw progress
             let center = CGPointMake(allRect.size.width / 2, allRect.size.height / 2)
             let radius = (allRect.size.width - 4) / 2
-            let startAngle = -(M_PI / 2) // 90 degrees
-            let endAngle = progress * 2 * M_PI + startAngle
-            progressTintColor?.setFill()
+            let startAngle = -(pi / 2) // 90 degrees
+            let endAngle = progress * 2 * pi + startAngle
+            progressTintColor.setFill()
             CGContextMoveToPoint(context, center.x, center.y)
             CGContextAddArc(context, center.x, center.y, radius, CGFloat(startAngle), CGFloat(endAngle), 0)
             CGContextClosePath(context)

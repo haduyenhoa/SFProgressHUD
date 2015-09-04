@@ -4,12 +4,12 @@
   'roots': [
     {
       'type': 'directory',
-      'name': "/Users/mac/Desktop/SFProgress/DerivedData/SFProgress/Build/Products/Debug-iphoneos/SFProgress.framework/Headers",
+      'name': "/Users/mac/Desktop/SFProgress/DerivedData/SFProgress/Build/Products/Debug-iphonesimulator/SFProgress.framework/Headers",
       'contents': [
         {
           'type': 'file',
           'name': "SFProgress-Swift.h",
-          'external-contents': "/Users/mac/Desktop/SFProgress/DerivedData/SFProgress/Build/Products/Debug-iphoneos/SFProgress.framework/Headers/SFProgress-Swift.h"
+          'external-contents': "/Users/mac/Desktop/SFProgress/DerivedData/SFProgress/Build/Products/Debug-iphonesimulator/SFProgress.framework/Headers/SFProgress-Swift.h"
         },
         {
           'type': 'file',
@@ -20,12 +20,12 @@
     },
     {
       'type': 'directory',
-      'name': "/Users/mac/Desktop/SFProgress/DerivedData/SFProgress/Build/Products/Debug-iphoneos/SFProgress.framework/Modules",
+      'name': "/Users/mac/Desktop/SFProgress/DerivedData/SFProgress/Build/Products/Debug-iphonesimulator/SFProgress.framework/Modules",
       'contents': [
         {
           'type': 'file',
           'name': "module.modulemap",
-          'external-contents': "/Users/mac/Desktop/SFProgress/DerivedData/SFProgress/Build/Intermediates/SFProgress.build/Debug-iphoneos/SFProgress.build/module.modulemap"
+          'external-contents': "/Users/mac/Desktop/SFProgress/DerivedData/SFProgress/Build/Intermediates/SFProgress.build/Debug-iphonesimulator/SFProgress.build/module.modulemap"
         }
       ]
     }
