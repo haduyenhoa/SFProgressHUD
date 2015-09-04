@@ -8,22 +8,6 @@
 
 import UIKit
 
-
-enum SFProgressHUDMode {
-    /** Progress is shown using an UIActivityIndicatorView. This is the default. */
-    case Indeterminate
-    /** Progress is shown using a round, pie-chart like, progress view. */
-    case Determinate
-    /** Progress is shown using a ring-shaped progress view. */
-    case AnnularDeterminate
-    /** Shows a custom view */
-    case CustomView
-    /** Shows only labels */
-    case Text
-};
-
-
-
 /**
 * Displays a simple HUD window containing a progress indicator and two optional labels for short messages.
 *
@@ -44,9 +28,12 @@ enum SFProgressHUDMode {
 *  - If also the detailsLabelText property is set then another label is placed below the first label.
 */
 
+let kPadding : CGFloat = 4.0
+
 public class SFProgressHUD : UIView {
     
-    var mode : SFProgressHUDMode = SFProgressHUDMode.Indeterminate
+    
+    var mode : SFProgressHUDMode = .Indeterminate
     var customView : UIView?
     var indicator : UIView?
     var color : UIColor?
@@ -61,12 +48,12 @@ public class SFProgressHUD : UIView {
     var minSize : CGSize = CGSizeZero
     var size : CGSize = CGSizeZero
     var square : Bool = false
+    var dimBackground : Bool = false
     var hudWasHidden : (() -> ())?
     var hudCompletion : (() -> ())?
     
     private var isFinished : Bool = false
     private var useAnimation : Bool = false
-    private var dimBackground : Bool = false
     private var taskInProgress : Bool = false
     
     private var removeFromSuperViewOnHide : Bool = false
@@ -77,7 +64,7 @@ public class SFProgressHUD : UIView {
     
     
     static let labelFontSize : CGFloat = 16
-    static let detailLabelFontSize : CGFloat = 12
+    static let detailsLabelFontSize : CGFloat = 12
     
     
     /// MARK: class Method
@@ -125,6 +112,7 @@ public class SFProgressHUD : UIView {
         }
         return huds.count > 0 ? huds : nil
     }
+    
     
     /// show && hide
     
@@ -226,10 +214,15 @@ public class SFProgressHUD : UIView {
         self.rotationTransform = CGAffineTransformIdentity
         
         self.addSubview(label)
-        self.addSubview(detailLabel)
+        self.addSubview(detailsLabel)
         
         _sf_registeNotifications()
         _sf_registerForKVO()
+    }
+    
+    deinit {
+        _sf_unregisterFromKVO()
+        _sf_unregisteNotifications()
     }
     
     //  show on view
@@ -245,7 +238,96 @@ public class SFProgressHUD : UIView {
         super.init(coder: aDecoder)
     }
     
-    override public func drawRect(rect: CGRect) {
+    override public func layoutSubviews() {
+        super.layoutSubviews()
+        // Entirely cover the parent view
+        if let parent = self.superview {
+            self.frame = parent.bounds
+        }
+        let bounds = self.bounds
+        
+        // Determine the total widt and height needed
+        let maxWidth = bounds.size.width - 4 * margin
+        var totalSize = CGSizeZero
+        
+        var indicatorF = CGRectZero
+        if let indicator = indicator {
+            indicatorF = indicator.bounds
+            indicatorF.size.width = min(indicatorF.size.width, maxWidth)
+            totalSize.width = max(totalSize.width, indicatorF.size.width)
+            totalSize.height += indicatorF.size.height
+        }
+        
+        var labelSize = _sf_textSize(label.text, font:label.font)
+        labelSize.width = min(labelSize.width, maxWidth)
+        totalSize.width = min(totalSize.width, labelSize.width)
+        totalSize.height += labelSize.height
+        if (labelSize.height > 0.0 && indicatorF.size.height > 0.0) {
+            totalSize.height += kPadding
+        }
+        
+        let remainingHeight = bounds.size.height - totalSize.height - kPadding - 4 * margin
+        let maxSize = CGSizeMake(maxWidth, remainingHeight)
+        let detailsLabelSize = _sf_mutilLineTextSize(detailsLabel.text, font:detailsLabel.font, maxSize:maxSize)
+        totalSize.width = max(totalSize.width, detailsLabelSize.width)
+        totalSize.height += detailsLabelSize.height
+        if (detailsLabelSize.height > 0.0 && (indicatorF.size.height > 0.0 || labelSize.height > 0.0)) {
+            totalSize.height += kPadding
+        }
+        
+        totalSize.width += 2 * margin
+        totalSize.height += 2 * margin
+        
+        // Position elements
+        var yPos = round(((bounds.size.height - totalSize.height) / 2)) + margin + yOffset
+        let xPos = xOffset
+        indicatorF.origin.y = yPos
+        indicatorF.origin.x = round((bounds.size.width - indicatorF.size.width) / 2) + xPos
+        if let indicator = indicator {
+            indicator.frame = indicatorF
+        }
+        yPos += indicatorF.size.height
+        
+        if (labelSize.height > 0.0 && indicatorF.size.height > 0.0) {
+            yPos += kPadding
+        }
+        var labelF = CGRectZero
+        labelF.origin.y = yPos
+        labelF.origin.x = round((bounds.size.width - labelSize.width) / 2) + xPos
+        labelF.size = labelSize
+        label.frame = labelF
+        yPos += labelF.size.height
+        
+        if (detailsLabelSize.height > 0.0 && (indicatorF.size.height > 0.0 || labelSize.height > 0.0)) {
+            yPos += kPadding
+        }
+        var detailsLabelF = CGRectZero
+        detailsLabelF.origin.y = yPos
+        detailsLabelF.origin.x = round((bounds.size.width - detailsLabelSize.width) / 2) + xPos
+        detailsLabelF.size = detailsLabelSize
+        detailsLabel.frame = detailsLabelF
+        
+        // Enforce minsize and quare rules
+        if (square) {
+            let maxValue = max(totalSize.width, totalSize.height)
+            if (maxValue <= bounds.size.width - 2 * margin) {
+                totalSize.width = maxValue
+            }
+            if (maxValue <= bounds.size.height - 2 * margin) {
+                totalSize.height = maxValue
+            }
+        }
+        if (totalSize.width < minSize.width) {
+            totalSize.width = minSize.width
+        } 
+        if (totalSize.height < minSize.height) {
+            totalSize.height = minSize.height
+        }
+        
+        size = totalSize
+    }
+    
+    public override func drawRect(rect: CGRect) {
         let context = UIGraphicsGetCurrentContext()
         UIGraphicsPushContext(context!)
         
@@ -280,11 +362,11 @@ public class SFProgressHUD : UIView {
         let radius = self.cornerRadius
         CGContextBeginPath(context)
         CGContextMoveToPoint(context, CGRectGetMinX(boxRect) + radius, CGRectGetMinY(boxRect))
-        CGContextAddArc(context, CGRectGetMaxX(boxRect) - radius, CGRectGetMinY(boxRect) + radius, radius, CGFloat(3 * Float(M_PI) / 2), 0, 0)
-        CGContextAddArc(context, CGRectGetMaxX(boxRect) - radius, CGRectGetMaxY(boxRect) - radius, radius, 0, CGFloat(Float(M_PI) / 2), 0)
-        CGContextAddArc(context, CGRectGetMinX(boxRect) + radius, CGRectGetMaxY(boxRect) - radius, radius, CGFloat(Float(M_PI) / 2), CGFloat(M_PI), 0)
+        CGContextAddArc(context, CGRectGetMaxX(boxRect) - radius, CGRectGetMinY(boxRect) + radius, radius, CGFloat(3 * M_PI / 2), 0, 0)
+        CGContextAddArc(context, CGRectGetMaxX(boxRect) - radius, CGRectGetMaxY(boxRect) - radius, radius, 0, CGFloat(M_PI / 2), 0)
+        CGContextAddArc(context, CGRectGetMinX(boxRect) + radius, CGRectGetMaxY(boxRect) - radius, radius, CGFloat(M_PI / 2), CGFloat(M_PI), 0)
         CGContextAddArc(context, CGRectGetMinX(boxRect) + radius, CGRectGetMinY(boxRect) + radius, radius, CGFloat(M_PI),
-            CGFloat(3 * Float(M_PI) / 2), 0)
+            CGFloat(3 * M_PI / 2), 0)
         CGContextClosePath(context)
         CGContextFillPath(context)
         
@@ -306,12 +388,6 @@ public class SFProgressHUD : UIView {
     func _sf_observableKeypaths() -> [String] {
         return ["mode",
             "customView",
-            "labelText",
-            "labelFont",
-            "labelColor",
-            "detailsLabelText",
-            "detailsLabelFont",
-            "detailsLabelColor",
             "progress",
             "activityIndicatorColor"]
     }
@@ -365,16 +441,17 @@ public class SFProgressHUD : UIView {
     
     func _sf_updateIndicator() {
         let isActivityIndicator : Bool = indicator is UIActivityIndicatorView
-        let isRoundIndicator : Bool = indicator is SFProgressHUD
+        let isRoundIndicator : Bool = indicator is SFRoundProgressView
         
         if (mode == .Indeterminate) {
             if (!isActivityIndicator) {
                 // Update to indeterminate indicator
-                var indicatorView = indicator as! UIActivityIndicatorView
-                indicatorView.removeFromSuperview()
-                indicatorView = UIActivityIndicatorView(activityIndicatorStyle:.WhiteLarge)
-                indicatorView.startAnimating()
-                self.addSubview(indicatorView)
+                if indicator != nil {
+                    indicator!.removeFromSuperview()
+                    indicator = UIActivityIndicatorView(activityIndicatorStyle:.WhiteLarge)
+                    (indicator as! UIActivityIndicatorView).startAnimating()
+                    self.addSubview(indicator!)
+                }
             }
         } else if (mode == .Determinate || mode == .AnnularDeterminate) {
             if (!isRoundIndicator) {
@@ -399,29 +476,56 @@ public class SFProgressHUD : UIView {
         }
     }
     
+    func _sf_textSize(text: String?, font: UIFont) -> CGSize {
+        if let text = text where text.characters.count > 0 {
+            return text.sizeWithAttributes([NSFontAttributeName : font])
+        } else {
+            return CGSizeZero
+        }
+    }
+
+    func _sf_mutilLineTextSize(text: String?, font: UIFont, maxSize: CGSize) -> CGSize {
+        if let text = text where text.characters.count > 0 {
+            return text.boundingRectWithSize(maxSize, options:.UsesLineFragmentOrigin, attributes:[NSFontAttributeName : font], context:nil).size
+        } else {
+            return CGSizeZero
+        }
+    }
+    
     lazy var label : UILabel = {
         let label = UILabel(frame: self.bounds)
         label.adjustsFontSizeToFitWidth = false
-        label.textAlignment = NSTextAlignment.Center
+        label.textAlignment = .Center
         label.opaque = false
         label.backgroundColor = UIColor.clearColor()
         label.font = UIFont.boldSystemFontOfSize(labelFontSize)
         label.textColor = UIColor.whiteColor()
-        self.addSubview(label)
         return label
         }()
     
-    lazy var detailLabel : UILabel = {
-        let label = UILabel(frame: self.bounds)
-        label.adjustsFontSizeToFitWidth = false
-        label.textAlignment = NSTextAlignment.Center
-        label.opaque = false
-        label.backgroundColor = UIColor.clearColor()
-        label.font = UIFont.boldSystemFontOfSize(detailLabelFontSize)
-        label.textColor = UIColor.whiteColor()
-        self.addSubview(label)
-        return label
+    lazy var detailsLabel : UILabel = {
+        let detailsLabel = UILabel(frame: self.bounds)
+        detailsLabel.adjustsFontSizeToFitWidth = false
+        detailsLabel.textAlignment = .Center
+        detailsLabel.opaque = false
+        detailsLabel.backgroundColor = UIColor.clearColor()
+        detailsLabel.font = UIFont.boldSystemFontOfSize(detailsLabelFontSize)
+        detailsLabel.textColor = UIColor.whiteColor()
+        return detailsLabel
         }()
+    
+    public enum SFProgressHUDMode {
+        /** Progress is shown using an UIActivityIndicatorView. This is the default. */
+        case Indeterminate
+        /** Progress is shown using a round, pie-chart like, progress view. */
+        case Determinate
+        /** Progress is shown using a ring-shaped progress view. */
+        case AnnularDeterminate
+        /** Shows a custom view */
+        case CustomView
+        /** Shows only labels */
+        case Text
+    }
 }
 
 /// Provides the general look and feel of the APPLE HUD,
@@ -529,6 +633,9 @@ class SFRoundProgressView : UIView {
         }
     }
     
+    deinit {
+        _sf_unregisterFromKVO()
+    }
     
     // MARK: KVO
     func _sf_registerForKVO() {
