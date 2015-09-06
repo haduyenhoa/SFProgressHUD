@@ -1,0 +1,19 @@
+PODS:
+  - SFProgressHUD (0.0.4)
+
+DEPENDENCIES:
+  - SFProgressHUD (from `https://github.com/looseyi/SFProgressHUD.git`)
+
+EXTERNAL SOURCES:
+  SFProgressHUD:
+    :git: https://github.com/looseyi/SFProgressHUD.git
+
+CHECKOUT OPTIONS:
+  SFProgressHUD:
+    :commit: 73760dc5a0dc923b3812dedf35c3074022023b4b
+    :git: https://github.com/looseyi/SFProgressHUD.git
+
+SPEC CHECKSUMS:
+  SFProgressHUD: b9833eec8d17591f9a85b728f9dca18aa6f6a2a0
+
+COCOAPODS: 0.38.2

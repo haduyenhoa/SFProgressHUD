@@ -1,0 +1,6 @@
+framework module SFProgressHUD {
+  umbrella header "SFProgressHUD-umbrella.h"
+
+  export *
+  module * { export * }
+}

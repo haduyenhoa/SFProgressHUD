@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		10AD4358CD3C0179BC08E340 /* Pods_Demo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FF0ED02ACCA2449A0B1459C7 /* Pods_Demo.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		85F4703F1B99FDA200CB481C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F4703E1B99FDA200CB481C /* AppDelegate.swift */; };
 		85F470411B99FDA200CB481C /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F470401B99FDA200CB481C /* MasterViewController.swift */; };
 		85F470431B99FDA200CB481C /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F470421B99FDA200CB481C /* DetailViewController.swift */; };
@@ -61,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				10AD4358CD3C0179BC08E340 /* Pods_Demo.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -168,9 +170,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 85F470651B99FDA200CB481C /* Build configuration list for PBXNativeTarget "Demo" */;
 			buildPhases = (
+				56158BB3F947C05A368F9FE4 /* Check Pods Manifest.lock */,
 				85F470371B99FDA200CB481C /* Sources */,
 				85F470381B99FDA200CB481C /* Frameworks */,
 				85F470391B99FDA200CB481C /* Resources */,
+				2D4720C607587398548C20C8 /* Embed Pods Frameworks */,
+				96E5A6029232C1AD70F4A05A /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -285,6 +290,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		2D4720C607587398548C20C8 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Demo/Pods-Demo-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		56158BB3F947C05A368F9FE4 /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		96E5A6029232C1AD70F4A05A /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Demo/Pods-Demo-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		85F470371B99FDA200CB481C /* Sources */ = {
