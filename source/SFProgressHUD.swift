@@ -36,6 +36,7 @@ public class SFProgressHUD : UIView {
     dynamic var customView : UIView?
     dynamic var indicator : UIView?
     dynamic var progress : Float = 0.0
+    
     var effectView = SFEffectView()
     var color : UIColor?
     var opacity : CGFloat = 0.9
@@ -163,7 +164,7 @@ public class SFProgressHUD : UIView {
         self.hideUseAnimation(useAnimation)
     }
     
-    override public func didMoveToSuperview() {
+    override func didMoveToSuperview() {
         self._sf_updateForCurrentOrientationAnimated(false)
     }
     
@@ -228,19 +229,19 @@ public class SFProgressHUD : UIView {
     }
     
     //  show on view
-    public convenience init(view: UIView) {
+    convenience init(view: UIView) {
         self.init(frame:view.bounds)
     }
     
-    public convenience init(window: UIView) {
+    convenience init(window: UIView) {
         self.init(view:window)
     }
     
-    required public init?(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
-    override public func layoutSubviews() {
+    override func layoutSubviews() {
         super.layoutSubviews()
         // Entirely cover the parent view
         if let parent = self.superview {
@@ -329,7 +330,7 @@ public class SFProgressHUD : UIView {
         size = totalSize
     }
     
-    public override func drawRect(rect: CGRect) {
+    override func drawRect(rect: CGRect) {
         let context = UIGraphicsGetCurrentContext()
         UIGraphicsPushContext(context!)
         
@@ -381,26 +382,26 @@ public class SFProgressHUD : UIView {
         UIGraphicsPopContext()
     }
     
-    func _sf_registerForKVO() {
+    private func _sf_registerForKVO() {
         for keyPath in self._sf_observableKeypaths() {
             self.addObserver(self, forKeyPath:keyPath, options:.New, context:nil)
         }
     }
     
-    func _sf_unregisterFromKVO() {
+    private func _sf_unregisterFromKVO() {
         for keyPath in self._sf_observableKeypaths() {
             self.removeObserver(self, forKeyPath:keyPath)
         }
     }
     
-    func _sf_observableKeypaths() -> [String] {
+    private func _sf_observableKeypaths() -> [String] {
         return ["mode",
             "customView",
             "progress",
             "activityIndicatorColor"]
     }
     
-    override public func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         if !NSThread.isMainThread() {
             self.performSelectorOnMainThread("_sf_updateUIForKeypath", withObject:keyPath, waitUntilDone: false)
         } else {
@@ -408,7 +409,7 @@ public class SFProgressHUD : UIView {
         }
     }
     
-    func _sf_updateUIForKeypath(keyPath: String) {
+    private func _sf_updateUIForKeypath(keyPath: String) {
         if keyPath == "mode" || keyPath == "customView" || keyPath == "activityIndicatorColor" {
             self._sf_updateIndicator()
         } else if keyPath == "progress" {
@@ -423,15 +424,15 @@ public class SFProgressHUD : UIView {
     
     // MARK: Notifications
     
-    func _sf_registeNotifications() {
+    private func _sf_registeNotifications() {
         NSNotificationCenter.defaultCenter().addObserver(self, selector:"statusBarOrientationDidChange:", name:UIApplicationDidChangeStatusBarOrientationNotification, object:nil)
     }
     
-    func _sf_unregisteNotifications() {
+    private func _sf_unregisteNotifications() {
         NSNotificationCenter.defaultCenter().removeObserver(self, name:UIApplicationDidChangeStatusBarOrientationNotification, object:nil)
     }
     
-    func statusBarOrientationDidChange(notification: NSNotification) {
+    private func statusBarOrientationDidChange(notification: NSNotification) {
         if self.superview != nil {
             return
         } else {
@@ -439,7 +440,7 @@ public class SFProgressHUD : UIView {
         }
     }
     
-    func _sf_updateForCurrentOrientationAnimated(animated: Bool) {
+    private func _sf_updateForCurrentOrientationAnimated(animated: Bool) {
         // Stay in sync with the superview in any case
         if let superview = self.superview {
             bounds = superview.bounds
@@ -447,7 +448,7 @@ public class SFProgressHUD : UIView {
         }
     }
     
-    func _sf_updateIndicator() {
+    private func _sf_updateIndicator() {
         let isActivityIndicator : Bool = indicator is UIActivityIndicatorView
         let isRoundIndicator : Bool = indicator is SFRoundProgressView
         
@@ -487,7 +488,7 @@ public class SFProgressHUD : UIView {
         }
     }
     
-    func _sf_textSize(text: String?, font: UIFont) -> CGSize {
+    private func _sf_textSize(text: String?, font: UIFont) -> CGSize {
         if let text = text where text.characters.count > 0 {
             return text.sizeWithAttributes([NSFontAttributeName : font])
         } else {
@@ -495,7 +496,7 @@ public class SFProgressHUD : UIView {
         }
     }
     
-    func _sf_mutilLineTextSize(text: String?, font: UIFont, maxSize: CGSize) -> CGSize {
+    private func _sf_mutilLineTextSize(text: String?, font: UIFont, maxSize: CGSize) -> CGSize {
         if let text = text where text.characters.count > 0 {
             return text.boundingRectWithSize(maxSize, options:.UsesLineFragmentOrigin, attributes:[NSFontAttributeName : font], context:nil).size
         } else {
@@ -503,7 +504,7 @@ public class SFProgressHUD : UIView {
         }
     }
     
-    lazy var label : UILabel = {
+    lazy public var label : UILabel = {
         let label = UILabel(frame: self.bounds)
         label.adjustsFontSizeToFitWidth = false
         label.textAlignment = .Center
@@ -514,7 +515,7 @@ public class SFProgressHUD : UIView {
         return label
         }()
     
-    lazy var detailsLabel : UILabel = {
+    lazy public var detailsLabel : UILabel = {
         let detailsLabel = UILabel(frame: self.bounds)
         detailsLabel.adjustsFontSizeToFitWidth = false
         detailsLabel.textAlignment = .Center

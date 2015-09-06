@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		85EC2A001B998B6F007F474A /* SFProgressHUD.h in Headers */ = {isa = PBXBuildFile; fileRef = 85EC29FF1B998B6F007F474A /* SFProgressHUD.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		85CF68B61B9C48BD0085B494 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 85CF68B41B9C48BD0085B494 /* Info.plist */; settings = {ASSET_TAGS = (); }; };
+		85CF68B71B9C48BD0085B494 /* SFProgressHUD.h in Headers */ = {isa = PBXBuildFile; fileRef = 85CF68B51B9C48BD0085B494 /* SFProgressHUD.h */; settings = {ASSET_TAGS = (); }; };
 		85EC2A071B998B6F007F474A /* SFProgressHUD.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 85EC29FC1B998B6F007F474A /* SFProgressHUD.framework */; settings = {ASSET_TAGS = (); }; };
 		85EC2A0C1B998B6F007F474A /* SFProgressHUDTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85EC2A0B1B998B6F007F474A /* SFProgressHUDTests.swift */; };
 		85F470731B9A02B200CB481C /* SFProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85F470721B9A02B200CB481C /* SFProgressHUD.swift */; settings = {ASSET_TAGS = (); }; };
@@ -24,9 +25,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		85CF68B41B9C48BD0085B494 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		85CF68B51B9C48BD0085B494 /* SFProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFProgressHUD.h; sourceTree = "<group>"; };
 		85EC29FC1B998B6F007F474A /* SFProgressHUD.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SFProgressHUD.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		85EC29FF1B998B6F007F474A /* SFProgressHUD.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SFProgressHUD.h; sourceTree = "<group>"; };
-		85EC2A011B998B6F007F474A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		85EC2A061B998B6F007F474A /* SFProgressHUD.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SFProgressHUD.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		85EC2A0B1B998B6F007F474A /* SFProgressHUDTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFProgressHUDTests.swift; sourceTree = "<group>"; };
 		85EC2A0D1B998B6F007F474A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -52,11 +53,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		85CF68B31B9C48BD0085B494 /* SFProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				85CF68B41B9C48BD0085B494 /* Info.plist */,
+				85CF68B51B9C48BD0085B494 /* SFProgressHUD.h */,
+			);
+			path = SFProgressHUD;
+			sourceTree = "<group>";
+		};
 		85EC29F21B998B6F007F474A = {
 			isa = PBXGroup;
 			children = (
+				85CF68B31B9C48BD0085B494 /* SFProgressHUD */,
 				85F470711B9A02B200CB481C /* source */,
-				85EC29FE1B998B6F007F474A /* SFProgress */,
 				85EC2A0A1B998B6F007F474A /* SFProgressTests */,
 				85EC29FD1B998B6F007F474A /* Products */,
 			);
@@ -69,15 +79,6 @@
 				85EC2A061B998B6F007F474A /* SFProgressHUD.xctest */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		85EC29FE1B998B6F007F474A /* SFProgress */ = {
-			isa = PBXGroup;
-			children = (
-				85EC29FF1B998B6F007F474A /* SFProgressHUD.h */,
-				85EC2A011B998B6F007F474A /* Info.plist */,
-			);
-			path = SFProgress;
 			sourceTree = "<group>";
 		};
 		85EC2A0A1B998B6F007F474A /* SFProgressTests */ = {
@@ -104,7 +105,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				85EC2A001B998B6F007F474A /* SFProgressHUD.h in Headers */,
+				85CF68B71B9C48BD0085B494 /* SFProgressHUD.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -187,6 +188,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85CF68B61B9C48BD0085B494 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -323,7 +325,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = SFProgress/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/SFProgressHUD/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.xueqiu.fund.SFProgress;
@@ -339,7 +341,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = SFProgress/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/SFProgressHUD/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.xueqiu.fund.SFProgress;
