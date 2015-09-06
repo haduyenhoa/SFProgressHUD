@@ -70,7 +70,7 @@ public class SFProgressHUD : UIView {
     
     /// MARK: class Method
     
-    public class func showHUD(view: UIView, animated: Bool) -> SFProgressHUD {
+    class func showHUD(view: UIView, animated: Bool) -> SFProgressHUD {
         let hud: SFProgressHUD = SFProgressHUD(view:view)
         hud.removeFromSuperViewOnHide = true
         view.addSubview(hud)
@@ -78,7 +78,7 @@ public class SFProgressHUD : UIView {
         return hud
     }
     
-    public class func hideHUD(view: UIView, animated: Bool) -> Bool {
+    class func hideHUD(view: UIView, animated: Bool) -> Bool {
         if let hud = SFProgressHUD.HUD(view) {
             hud.removeFromSuperViewOnHide = true
             hud.hide(animated)
@@ -87,7 +87,7 @@ public class SFProgressHUD : UIView {
         return false
     }
     
-    public class func hideAllHUDs(onView: UIView, animated: Bool) -> Bool {
+    class func hideAllHUDs(onView: UIView, animated: Bool) -> Bool {
         var result = false
         if let huds = self.allHUDs(onView) {
             for hud in huds {
@@ -99,14 +99,14 @@ public class SFProgressHUD : UIView {
         return result
     }
     
-    public class func HUD(onView: UIView) -> SFProgressHUD? {
+    class func HUD(onView: UIView) -> SFProgressHUD? {
         for case let hud as SFProgressHUD in onView.subviews {
             return hud
         }
         return nil
     }
     
-    public class func allHUDs(onView: UIView) -> [SFProgressHUD]? {
+    class func allHUDs(onView: UIView) -> [SFProgressHUD]? {
         var huds = [SFProgressHUD]()
         for case let hud as SFProgressHUD in onView.subviews {
             huds.append(hud)
@@ -117,7 +117,7 @@ public class SFProgressHUD : UIView {
     
     /// show && hide
     
-    public func show(animated: Bool) {
+    func show(animated: Bool) {
         assert(NSThread.isMainThread(), "ProgressHUD needs to be accessed on the main thread.")
         useAnimation = animated
         if (self.graceTime > 0.0) {
@@ -129,7 +129,7 @@ public class SFProgressHUD : UIView {
         }
     }
     
-    public func hide(animated: Bool) {
+    func hide(animated: Bool) {
         assert(NSThread.isMainThread(), "ProgressHUD needs to be accessed on the main thread.")
         useAnimation = animated;
         // If the minShow time is set, calculate how long the hud was shown,
@@ -142,21 +142,21 @@ public class SFProgressHUD : UIView {
             }
         }
         // ... otherwise hide the HUD immediately
-        self.hideUseAnimation(useAnimation)
+        hideUseAnimation(useAnimation)
     }
     
-    public func hide(animated: Bool, afterDelay: NSTimeInterval) {
+    func hide(animated: Bool, afterDelay: NSTimeInterval) {
         self.performSelector("hideDelayed:", withObject:NSNumber(bool:animated), afterDelay:afterDelay)
     }
     
-    public func hideDelayed(animated: NSNumber) {
-        self.hide(animated.boolValue)
+    func hideDelayed(animated: NSNumber) {
+        hide(animated.boolValue)
     }
     
     // Timer CallBack
     func handleGraceTimer(timer: NSTimer) {
         if taskInProgress {
-            self.showUsingAnimation(useAnimation)
+            showUsingAnimation(useAnimation)
         }
     }
     
@@ -164,8 +164,9 @@ public class SFProgressHUD : UIView {
         self.hideUseAnimation(useAnimation)
     }
     
-    override func didMoveToSuperview() {
-        self._sf_updateForCurrentOrientationAnimated(false)
+    override public func didMoveToSuperview() {
+        super.didMoveToSuperview()
+        _sf_updateForCurrentOrientationAnimated(false)
     }
     
     
@@ -201,7 +202,7 @@ public class SFProgressHUD : UIView {
         isFinished = true
         self.alpha = 0.0
         if removeFromSuperViewOnHide {
-            self.removeFromSuperview()
+            removeFromSuperview()
         }
     }
     
@@ -215,8 +216,8 @@ public class SFProgressHUD : UIView {
         self.rotationTransform = CGAffineTransformIdentity
         
         addSubview(effectView)
-        self.addSubview(label)
-        self.addSubview(detailsLabel)
+        addSubview(label)
+        addSubview(detailsLabel)
         
         _sf_updateIndicator()
         _sf_registeNotifications()
@@ -237,11 +238,11 @@ public class SFProgressHUD : UIView {
         self.init(view:window)
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
         // Entirely cover the parent view
         if let parent = self.superview {
@@ -330,7 +331,7 @@ public class SFProgressHUD : UIView {
         size = totalSize
     }
     
-    override func drawRect(rect: CGRect) {
+    override public func drawRect(rect: CGRect) {
         let context = UIGraphicsGetCurrentContext()
         UIGraphicsPushContext(context!)
         
@@ -384,13 +385,13 @@ public class SFProgressHUD : UIView {
     
     private func _sf_registerForKVO() {
         for keyPath in self._sf_observableKeypaths() {
-            self.addObserver(self, forKeyPath:keyPath, options:.New, context:nil)
+            addObserver(self, forKeyPath:keyPath, options:.New, context:nil)
         }
     }
     
     private func _sf_unregisterFromKVO() {
         for keyPath in self._sf_observableKeypaths() {
-            self.removeObserver(self, forKeyPath:keyPath)
+            removeObserver(self, forKeyPath:keyPath)
         }
     }
     
@@ -401,9 +402,9 @@ public class SFProgressHUD : UIView {
             "activityIndicatorColor"]
     }
     
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    override public func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         if !NSThread.isMainThread() {
-            self.performSelectorOnMainThread("_sf_updateUIForKeypath", withObject:keyPath, waitUntilDone: false)
+            performSelectorOnMainThread("_sf_updateUIForKeypath", withObject:keyPath, waitUntilDone: false)
         } else {
             _sf_updateUIForKeypath(keyPath!)
         }
@@ -418,8 +419,8 @@ public class SFProgressHUD : UIView {
             }
             return
         }
-        self.setNeedsLayout()
-        self.setNeedsDisplay()
+        setNeedsLayout()
+        setNeedsDisplay()
     }
     
     // MARK: Notifications
@@ -436,7 +437,7 @@ public class SFProgressHUD : UIView {
         if self.superview != nil {
             return
         } else {
-            self._sf_updateForCurrentOrientationAnimated(true)
+            _sf_updateForCurrentOrientationAnimated(true)
         }
     }
     
@@ -444,7 +445,7 @@ public class SFProgressHUD : UIView {
         // Stay in sync with the superview in any case
         if let superview = self.superview {
             bounds = superview.bounds
-            self.setNeedsDisplay()
+            setNeedsDisplay()
         }
     }
     
@@ -461,14 +462,14 @@ public class SFProgressHUD : UIView {
                     indicator!.removeFromSuperview()
                 }
                 (indicator as! UIActivityIndicatorView).startAnimating()
-                self.addSubview(indicator!)
+                addSubview(indicator!)
             }
         } else if (mode == .Determinate || mode == .AnnularDeterminate) {
             if (!isRoundIndicator) {
                 // Update to determinante indicator
                 indicator!.removeFromSuperview()
                 indicator = SFRoundProgressView()
-                self.addSubview(indicator!)
+                addSubview(indicator!)
             }
             if (mode == .AnnularDeterminate) {
                 let progressView = indicator as! SFRoundProgressView
@@ -480,7 +481,7 @@ public class SFProgressHUD : UIView {
             if let customView = customView {
                 indicator!.removeFromSuperview()
                 indicator = customView
-                self.addSubview(indicator!)
+                addSubview(indicator!)
             }
         } else if (mode == .Text) {
             indicator!.removeFromSuperview()
@@ -526,7 +527,7 @@ public class SFProgressHUD : UIView {
         return detailsLabel
         }()
     
-    @objc public enum SFProgressHUDMode : NSInteger {
+    @objc enum SFProgressHUDMode : NSInteger {
         /** Progress is shown using an UIActivityIndicatorView. This is the default. */
         case Indeterminate
         /** Progress is shown using a round, pie-chart like, progress view. */
@@ -542,13 +543,13 @@ public class SFProgressHUD : UIView {
 
 /// Provides the general look and feel of the APPLE HUD,
 /// into which the eventual content is inserted.
-public class SFEffectView : UIVisualEffectView {
+class SFEffectView : UIVisualEffectView {
     init() {
         super.init(effect: UIBlurEffect(style: .Light))
         commonInit()
     }
     
-    required public init?(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
     }
@@ -685,7 +686,8 @@ class SFRoundProgressView : UIView {
             "annular"]
     }
     
-    override internal func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    override public func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         self.setNeedsDisplay()
     }
 }
+
