@@ -1,5 +1,5 @@
 PODS:
-  - SFProgressHUD (0.0.4)
+  - SFProgressHUD (0.0.5)
 
 DEPENDENCIES:
   - SFProgressHUD (from `https://github.com/looseyi/SFProgressHUD.git`)
@@ -10,10 +10,10 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   SFProgressHUD:
-    :commit: 73760dc5a0dc923b3812dedf35c3074022023b4b
+    :commit: a1e442f6e47dcca6c1efe2a9b5d09c1d20214ca3
     :git: https://github.com/looseyi/SFProgressHUD.git
 
 SPEC CHECKSUMS:
-  SFProgressHUD: b9833eec8d17591f9a85b728f9dca18aa6f6a2a0
+  SFProgressHUD: 4818c214d69d57480046392fc3c9aa64a8c33b13
 
 COCOAPODS: 0.38.2

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import SFProgressHUD
 
 class DetailViewController: UIViewController {
     @IBOutlet weak var detailDescriptionLabel: UILabel!

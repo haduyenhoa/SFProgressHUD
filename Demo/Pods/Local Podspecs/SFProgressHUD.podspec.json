@@ -1,6 +1,6 @@
 {
   "name": "SFProgressHUD",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "summary": "SFProgress, MBProgress by swift 2.0, with apple Effect view",
   "homepage": "https://github.com/looseyi/SFProgressHUD.git",
   "license": "MIT",
@@ -12,7 +12,7 @@
   },
   "source": {
     "git": "https://github.com/looseyi/SFProgressHUD.git",
-    "tag": "0.0.4"
+    "tag": "0.0.5"
   },
   "source_files": "source/*.swift",
   "exclude_files": "Classes/Demo",

@@ -8,6 +8,160 @@
 
 import UIKit
 
+
+public class SFRoundProgressView : UIView {
+    public dynamic var progress : Float = 0.0
+    public dynamic var progressTintColor = UIColor(white:0.5, alpha:1.0)
+    public dynamic var backgroundTintColor = UIColor(white:1.0, alpha:1.0)
+    public dynamic var annular : Bool = false
+    
+    convenience init() {
+        self.init(frame:CGRectMake(0, 0, 37, 37))
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame:frame)
+        self.backgroundColor = UIColor.clearColor()
+        self.opaque = false
+        _sf_registerForKVO()
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder:aDecoder)
+    }
+    
+    override public func drawRect(rect: CGRect) {
+        let allRect = self.bounds
+        let circleRect = CGRectInset(allRect, 2.0, 2.0)
+        let context = UIGraphicsGetCurrentContext()
+        
+        let pi = Float(M_PI)
+        if (annular) {
+            // Draw background
+            let  lineWidth: CGFloat = 2.0
+            let processBackgroundPath = UIBezierPath()
+            processBackgroundPath.lineWidth = lineWidth
+            processBackgroundPath.lineCapStyle = .Butt
+            let center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2)
+            let radius = (self.bounds.size.width - lineWidth)/2
+            let startAngle = -(pi / 2) // 90 degrees
+            var endAngle =  2 * pi + startAngle
+            processBackgroundPath.addArcWithCenter(center, radius:radius, startAngle:CGFloat(startAngle), endAngle:CGFloat(endAngle), clockwise: true)
+            backgroundTintColor.set()
+            processBackgroundPath.stroke()
+            // Draw progress
+            let processPath = UIBezierPath()
+            processPath.lineCapStyle = .Square
+            processPath.lineWidth = lineWidth
+            endAngle = progress * 2 * pi + startAngle
+            processPath.addArcWithCenter(center, radius:radius, startAngle:CGFloat(startAngle), endAngle:CGFloat(endAngle), clockwise: true)
+            progressTintColor.set()
+            processPath.stroke()
+        } else {
+            // Draw background
+            progressTintColor.setStroke()
+            backgroundTintColor.setFill()
+            CGContextSetLineWidth(context, 2.0)
+            CGContextFillEllipseInRect(context, circleRect)
+            CGContextStrokeEllipseInRect(context, circleRect)
+            // Draw progress
+            let center = CGPointMake(allRect.size.width / 2, allRect.size.height / 2)
+            let radius = (allRect.size.width - 4) / 2
+            let startAngle = -(pi / 2) // 90 degrees
+            let endAngle = progress * 2 * pi + startAngle
+            progressTintColor.setFill()
+            CGContextMoveToPoint(context, center.x, center.y)
+            CGContextAddArc(context, center.x, center.y, radius, CGFloat(startAngle), CGFloat(endAngle), 0)
+            CGContextClosePath(context)
+            CGContextFillPath(context)
+        }
+    }
+    
+    deinit {
+        _sf_unregisterFromKVO()
+    }
+    
+    // MARK: KVO
+    func _sf_registerForKVO() {
+        for keyPath in self._sf_observableKeypaths() {
+            self.addObserver(self, forKeyPath:keyPath, options:.New, context:nil)
+        }
+    }
+    
+    func _sf_unregisterFromKVO() {
+        for keyPath in self._sf_observableKeypaths() {
+            self.removeObserver(self, forKeyPath:keyPath)
+        }
+    }
+    
+    func _sf_observableKeypaths() -> [String] {
+        return ["progressTintColor",
+            "backgroundTintColor",
+            "progress",
+            "annular"]
+    }
+    
+    override public func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        self.setNeedsDisplay()
+    }
+}
+
+
+/// Provides the general look and feel of the APPLE HUD,
+/// into which the eventual content is inserted.
+public class SFEffectView : UIVisualEffectView {
+    init() {
+        super.init(effect: UIBlurEffect(style: .Light))
+        commonInit()
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
+    }
+    
+    private func commonInit() {
+        backgroundColor = UIColor(white: 0.8, alpha: 0.36)
+        layer.cornerRadius = 9.0
+        layer.masksToBounds = true
+        
+        contentView.addSubview(self.content)
+        
+        let offset = 20.0
+        
+        let motionEffectsX = UIInterpolatingMotionEffect(keyPath: "center.x", type: .TiltAlongHorizontalAxis)
+        motionEffectsX.maximumRelativeValue = offset
+        motionEffectsX.minimumRelativeValue = -offset
+        
+        let motionEffectsY = UIInterpolatingMotionEffect(keyPath: "center.y", type: .TiltAlongVerticalAxis)
+        motionEffectsY.maximumRelativeValue = offset
+        motionEffectsY.minimumRelativeValue = -offset
+        
+        let group = UIMotionEffectGroup()
+        group.motionEffects = [motionEffectsX, motionEffectsY]
+        
+        addMotionEffect(group)
+    }
+    
+    private var _content = UIView()
+    internal var content: UIView {
+        get {
+            return _content
+        }
+        set {
+            _content.removeFromSuperview()
+            _content = newValue
+            _content.alpha = 0.85
+            _content.clipsToBounds = true
+            _content.contentMode = .Center
+            frame.size = _content.bounds.size
+            addSubview(_content)
+        }
+    }
+}
+
+
+
 /**
 * Displays a simple HUD window containing a progress indicator and two optional labels for short messages.
 *
@@ -32,12 +186,15 @@ let kPadding : CGFloat = 4.0
 
 public class SFProgressHUD : UIView {
     
-    dynamic var mode : SFProgressHUDMode = .Indeterminate
-    dynamic var customView : UIView?
-    dynamic var indicator : UIView?
-    dynamic var progress : Float = 0.0
+    public dynamic var mode : SFProgressHUDMode = .Indeterminate
+    public dynamic var customView : UIView?
+    public dynamic var indicator : UIView?
+    public dynamic var progress : Float = 0.0
+
+    public var color : UIColor?
+    public var dimBackground : Bool = false
+
     var effectView = SFEffectView()
-    var color : UIColor?
     var opacity : CGFloat = 0.9
     var xOffset : CGFloat = 0.0
     var yOffset : CGFloat = 0.0
@@ -48,9 +205,10 @@ public class SFProgressHUD : UIView {
     var minSize : CGSize = CGSizeZero
     var size : CGSize = CGSizeZero
     var square : Bool = false
-    var dimBackground : Bool = false
-    var hudWasHidden : (() -> ())?
-    var hudCompletion : (() -> ())?
+    
+    
+//    var hudWasHidden : (() -> ())?
+//    var hudCompletion : (() -> ())?
     
     private var isFinished : Bool = false
     private var useAnimation : Bool = false
@@ -384,13 +542,13 @@ public class SFProgressHUD : UIView {
     
     func _sf_registerForKVO() {
         for keyPath in self._sf_observableKeypaths() {
-            addObserver(self, forKeyPath:keyPath, options:.New, context:nil)
+            self.addObserver(self, forKeyPath:keyPath, options:.New, context:nil)
         }
     }
     
     func _sf_unregisterFromKVO() {
         for keyPath in self._sf_observableKeypaths() {
-            removeObserver(self, forKeyPath:keyPath)
+            self.removeObserver(self, forKeyPath:keyPath)
         }
     }
     
@@ -402,10 +560,8 @@ public class SFProgressHUD : UIView {
     }
     
     public override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-        super.observeValueForKeyPath(keyPath, ofObject:object, change:change, context: context)
-        
         if !NSThread.isMainThread() {
-            performSelectorOnMainThread("_sf_updateUIForKeypath", withObject:keyPath, waitUntilDone: false)
+            self.performSelectorOnMainThread("_sf_updateUIForKeypath:", withObject:keyPath, waitUntilDone: false)
         } else {
             _sf_updateUIForKeypath(keyPath!)
         }
@@ -539,156 +695,5 @@ public class SFProgressHUD : UIView {
         case CustomView
         /** Shows only labels */
         case Text
-    }
-    
-    public class SFRoundProgressView : UIView {
-        dynamic var progress : Float = 0.0
-        dynamic var progressTintColor = UIColor(white:0.5, alpha:1.0)
-        dynamic var backgroundTintColor = UIColor(white:1.0, alpha:1.0)
-        dynamic var annular : Bool = false
-        
-        convenience init() {
-            self.init(frame:CGRectMake(0, 0, 37, 37))
-        }
-        
-        override init(frame: CGRect) {
-            super.init(frame:frame)
-            self.backgroundColor = UIColor.clearColor()
-            self.opaque = false
-            _sf_registerForKVO()
-        }
-        
-        required public init?(coder aDecoder: NSCoder) {
-            super.init(coder:aDecoder)
-        }
-        
-        override public func drawRect(rect: CGRect) {
-            let allRect = self.bounds
-            let circleRect = CGRectInset(allRect, 2.0, 2.0)
-            let context = UIGraphicsGetCurrentContext()
-            
-            let pi = Float(M_PI)
-            if (annular) {
-                // Draw background
-                let  lineWidth: CGFloat = 2.0
-                let processBackgroundPath = UIBezierPath()
-                processBackgroundPath.lineWidth = lineWidth
-                processBackgroundPath.lineCapStyle = .Butt
-                let center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2)
-                let radius = (self.bounds.size.width - lineWidth)/2
-                let startAngle = -(pi / 2) // 90 degrees
-                var endAngle =  2 * pi + startAngle
-                processBackgroundPath.addArcWithCenter(center, radius:radius, startAngle:CGFloat(startAngle), endAngle:CGFloat(endAngle), clockwise: true)
-                backgroundTintColor.set()
-                processBackgroundPath.stroke()
-                // Draw progress
-                let processPath = UIBezierPath()
-                processPath.lineCapStyle = .Square
-                processPath.lineWidth = lineWidth
-                endAngle = progress * 2 * pi + startAngle
-                processPath.addArcWithCenter(center, radius:radius, startAngle:CGFloat(startAngle), endAngle:CGFloat(endAngle), clockwise: true)
-                progressTintColor.set()
-                processPath.stroke()
-            } else {
-                // Draw background
-                progressTintColor.setStroke()
-                backgroundTintColor.setFill()
-                CGContextSetLineWidth(context, 2.0)
-                CGContextFillEllipseInRect(context, circleRect)
-                CGContextStrokeEllipseInRect(context, circleRect)
-                // Draw progress
-                let center = CGPointMake(allRect.size.width / 2, allRect.size.height / 2)
-                let radius = (allRect.size.width - 4) / 2
-                let startAngle = -(pi / 2) // 90 degrees
-                let endAngle = progress * 2 * pi + startAngle
-                progressTintColor.setFill()
-                CGContextMoveToPoint(context, center.x, center.y)
-                CGContextAddArc(context, center.x, center.y, radius, CGFloat(startAngle), CGFloat(endAngle), 0)
-                CGContextClosePath(context)
-                CGContextFillPath(context)
-            }
-        }
-        
-        deinit {
-            _sf_unregisterFromKVO()
-        }
-        
-        // MARK: KVO
-        func _sf_registerForKVO() {
-            for keyPath in self._sf_observableKeypaths() {
-                addObserver(self, forKeyPath:keyPath, options:.New, context:nil)
-            }
-        }
-        
-        func _sf_unregisterFromKVO() {
-            for keyPath in self._sf_observableKeypaths() {
-                removeObserver(self, forKeyPath:keyPath)
-            }
-        }
-        
-        func _sf_observableKeypaths() -> [String] {
-            return ["progressTintColor",
-                "backgroundTintColor",
-                "progress",
-                "annular"]
-        }
-        
-        override public func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-            super.observeValueForKeyPath(keyPath, ofObject:object, change:change, context: context)
-            setNeedsDisplay()
-        }
-    }
-}
-
-/// Provides the general look and feel of the APPLE HUD,
-/// into which the eventual content is inserted.
-public class SFEffectView : UIVisualEffectView {
-    init() {
-        super.init(effect: UIBlurEffect(style: .Light))
-        commonInit()
-    }
-    
-    required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        commonInit()
-    }
-    
-    private func commonInit() {
-        backgroundColor = UIColor(white: 0.8, alpha: 0.36)
-        layer.cornerRadius = 9.0
-        layer.masksToBounds = true
-        
-        contentView.addSubview(self.content)
-        
-        let offset = 20.0
-        
-        let motionEffectsX = UIInterpolatingMotionEffect(keyPath: "center.x", type: .TiltAlongHorizontalAxis)
-        motionEffectsX.maximumRelativeValue = offset
-        motionEffectsX.minimumRelativeValue = -offset
-        
-        let motionEffectsY = UIInterpolatingMotionEffect(keyPath: "center.y", type: .TiltAlongVerticalAxis)
-        motionEffectsY.maximumRelativeValue = offset
-        motionEffectsY.minimumRelativeValue = -offset
-        
-        let group = UIMotionEffectGroup()
-        group.motionEffects = [motionEffectsX, motionEffectsY]
-        
-        addMotionEffect(group)
-    }
-    
-    private var _content = UIView()
-    internal var content: UIView {
-        get {
-            return _content
-        }
-        set {
-            _content.removeFromSuperview()
-            _content = newValue
-            _content.alpha = 0.85
-            _content.clipsToBounds = true
-            _content.contentMode = .Center
-            frame.size = _content.bounds.size
-            addSubview(_content)
-        }
     }
 }
