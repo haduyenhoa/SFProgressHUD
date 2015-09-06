@@ -36,7 +36,6 @@ public class SFProgressHUD : UIView {
     dynamic var customView : UIView?
     dynamic var indicator : UIView?
     dynamic var progress : Float = 0.0
-    
     var effectView = SFEffectView()
     var color : UIColor?
     var opacity : CGFloat = 0.9
@@ -70,7 +69,7 @@ public class SFProgressHUD : UIView {
     
     /// MARK: class Method
     
-    class func showHUD(view: UIView, animated: Bool) -> SFProgressHUD {
+    public class func showHUD(view: UIView, animated: Bool) -> SFProgressHUD {
         let hud: SFProgressHUD = SFProgressHUD(view:view)
         hud.removeFromSuperViewOnHide = true
         view.addSubview(hud)
@@ -78,7 +77,7 @@ public class SFProgressHUD : UIView {
         return hud
     }
     
-    class func hideHUD(view: UIView, animated: Bool) -> Bool {
+    public class func hideHUD(view: UIView, animated: Bool) -> Bool {
         if let hud = SFProgressHUD.HUD(view) {
             hud.removeFromSuperViewOnHide = true
             hud.hide(animated)
@@ -87,7 +86,7 @@ public class SFProgressHUD : UIView {
         return false
     }
     
-    class func hideAllHUDs(onView: UIView, animated: Bool) -> Bool {
+    public class func hideAllHUDs(onView: UIView, animated: Bool) -> Bool {
         var result = false
         if let huds = self.allHUDs(onView) {
             for hud in huds {
@@ -99,14 +98,14 @@ public class SFProgressHUD : UIView {
         return result
     }
     
-    class func HUD(onView: UIView) -> SFProgressHUD? {
+    public class func HUD(onView: UIView) -> SFProgressHUD? {
         for case let hud as SFProgressHUD in onView.subviews {
             return hud
         }
         return nil
     }
     
-    class func allHUDs(onView: UIView) -> [SFProgressHUD]? {
+    public class func allHUDs(onView: UIView) -> [SFProgressHUD]? {
         var huds = [SFProgressHUD]()
         for case let hud as SFProgressHUD in onView.subviews {
             huds.append(hud)
@@ -117,7 +116,7 @@ public class SFProgressHUD : UIView {
     
     /// show && hide
     
-    func show(animated: Bool) {
+    public func show(animated: Bool) {
         assert(NSThread.isMainThread(), "ProgressHUD needs to be accessed on the main thread.")
         useAnimation = animated
         if (self.graceTime > 0.0) {
@@ -125,11 +124,11 @@ public class SFProgressHUD : UIView {
                 userInfo: nil, repeats: false)
             NSRunLoop.currentRunLoop().addTimer(timer, forMode:NSRunLoopCommonModes)
         } else {
-            self.showUsingAnimation(useAnimation)
+            showUsingAnimation(useAnimation)
         }
     }
     
-    func hide(animated: Bool) {
+    public func hide(animated: Bool) {
         assert(NSThread.isMainThread(), "ProgressHUD needs to be accessed on the main thread.")
         useAnimation = animated;
         // If the minShow time is set, calculate how long the hud was shown,
@@ -145,23 +144,23 @@ public class SFProgressHUD : UIView {
         hideUseAnimation(useAnimation)
     }
     
-    func hide(animated: Bool, afterDelay: NSTimeInterval) {
+    public func hide(animated: Bool, afterDelay: NSTimeInterval) {
         self.performSelector("hideDelayed:", withObject:NSNumber(bool:animated), afterDelay:afterDelay)
     }
     
-    func hideDelayed(animated: NSNumber) {
+    public func hideDelayed(animated: NSNumber) {
         hide(animated.boolValue)
     }
     
     // Timer CallBack
-    func handleGraceTimer(timer: NSTimer) {
+    private func handleGraceTimer(timer: NSTimer) {
         if taskInProgress {
             showUsingAnimation(useAnimation)
         }
     }
     
-    func handleMinShowTimer(timer: NSTimer) {
-        self.hideUseAnimation(useAnimation)
+    private func handleMinShowTimer(timer: NSTimer) {
+        hideUseAnimation(useAnimation)
     }
     
     override public func didMoveToSuperview() {
@@ -172,7 +171,7 @@ public class SFProgressHUD : UIView {
     
     private func showUsingAnimation(animated: Bool) {
         NSObject.cancelPreviousPerformRequestsWithTarget(self)
-        self.setNeedsDisplay()
+        setNeedsDisplay()
         
         self.showStarted = NSDate()
         if animated {
@@ -230,11 +229,11 @@ public class SFProgressHUD : UIView {
     }
     
     //  show on view
-    convenience init(view: UIView) {
+    public convenience init(view: UIView) {
         self.init(frame:view.bounds)
     }
     
-    convenience init(window: UIView) {
+    public convenience init(window: UIView) {
         self.init(view:window)
     }
     
@@ -331,7 +330,7 @@ public class SFProgressHUD : UIView {
         size = totalSize
     }
     
-    override public func drawRect(rect: CGRect) {
+    public override func drawRect(rect: CGRect) {
         let context = UIGraphicsGetCurrentContext()
         UIGraphicsPushContext(context!)
         
@@ -383,26 +382,28 @@ public class SFProgressHUD : UIView {
         UIGraphicsPopContext()
     }
     
-    private func _sf_registerForKVO() {
+    func _sf_registerForKVO() {
         for keyPath in self._sf_observableKeypaths() {
             addObserver(self, forKeyPath:keyPath, options:.New, context:nil)
         }
     }
     
-    private func _sf_unregisterFromKVO() {
+    func _sf_unregisterFromKVO() {
         for keyPath in self._sf_observableKeypaths() {
             removeObserver(self, forKeyPath:keyPath)
         }
     }
     
-    private func _sf_observableKeypaths() -> [String] {
+    func _sf_observableKeypaths() -> [String] {
         return ["mode",
             "customView",
             "progress",
             "activityIndicatorColor"]
     }
     
-    override public func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    public override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        super.observeValueForKeyPath(keyPath, ofObject:object, change:change, context: context)
+        
         if !NSThread.isMainThread() {
             performSelectorOnMainThread("_sf_updateUIForKeypath", withObject:keyPath, waitUntilDone: false)
         } else {
@@ -410,7 +411,7 @@ public class SFProgressHUD : UIView {
         }
     }
     
-    private func _sf_updateUIForKeypath(keyPath: String) {
+    func _sf_updateUIForKeypath(keyPath: String) {
         if keyPath == "mode" || keyPath == "customView" || keyPath == "activityIndicatorColor" {
             self._sf_updateIndicator()
         } else if keyPath == "progress" {
@@ -419,21 +420,21 @@ public class SFProgressHUD : UIView {
             }
             return
         }
-        setNeedsLayout()
-        setNeedsDisplay()
+        self.setNeedsLayout()
+        self.setNeedsDisplay()
     }
     
     // MARK: Notifications
     
-    private func _sf_registeNotifications() {
+    func _sf_registeNotifications() {
         NSNotificationCenter.defaultCenter().addObserver(self, selector:"statusBarOrientationDidChange:", name:UIApplicationDidChangeStatusBarOrientationNotification, object:nil)
     }
     
-    private func _sf_unregisteNotifications() {
+    func _sf_unregisteNotifications() {
         NSNotificationCenter.defaultCenter().removeObserver(self, name:UIApplicationDidChangeStatusBarOrientationNotification, object:nil)
     }
     
-    private func statusBarOrientationDidChange(notification: NSNotification) {
+    func statusBarOrientationDidChange(notification: NSNotification) {
         if self.superview != nil {
             return
         } else {
@@ -441,7 +442,7 @@ public class SFProgressHUD : UIView {
         }
     }
     
-    private func _sf_updateForCurrentOrientationAnimated(animated: Bool) {
+    func _sf_updateForCurrentOrientationAnimated(animated: Bool) {
         // Stay in sync with the superview in any case
         if let superview = self.superview {
             bounds = superview.bounds
@@ -449,7 +450,7 @@ public class SFProgressHUD : UIView {
         }
     }
     
-    private func _sf_updateIndicator() {
+    func _sf_updateIndicator() {
         let isActivityIndicator : Bool = indicator is UIActivityIndicatorView
         let isRoundIndicator : Bool = indicator is SFRoundProgressView
         
@@ -489,7 +490,7 @@ public class SFProgressHUD : UIView {
         }
     }
     
-    private func _sf_textSize(text: String?, font: UIFont) -> CGSize {
+    func _sf_textSize(text: String?, font: UIFont) -> CGSize {
         if let text = text where text.characters.count > 0 {
             return text.sizeWithAttributes([NSFontAttributeName : font])
         } else {
@@ -497,7 +498,7 @@ public class SFProgressHUD : UIView {
         }
     }
     
-    private func _sf_mutilLineTextSize(text: String?, font: UIFont, maxSize: CGSize) -> CGSize {
+    func _sf_mutilLineTextSize(text: String?, font: UIFont, maxSize: CGSize) -> CGSize {
         if let text = text where text.characters.count > 0 {
             return text.boundingRectWithSize(maxSize, options:.UsesLineFragmentOrigin, attributes:[NSFontAttributeName : font], context:nil).size
         } else {
@@ -527,7 +528,7 @@ public class SFProgressHUD : UIView {
         return detailsLabel
         }()
     
-    @objc enum SFProgressHUDMode : NSInteger {
+    @objc public enum SFProgressHUDMode : NSInteger {
         /** Progress is shown using an UIActivityIndicatorView. This is the default. */
         case Indeterminate
         /** Progress is shown using a round, pie-chart like, progress view. */
@@ -539,17 +540,115 @@ public class SFProgressHUD : UIView {
         /** Shows only labels */
         case Text
     }
+    
+    public class SFRoundProgressView : UIView {
+        dynamic var progress : Float = 0.0
+        dynamic var progressTintColor = UIColor(white:0.5, alpha:1.0)
+        dynamic var backgroundTintColor = UIColor(white:1.0, alpha:1.0)
+        dynamic var annular : Bool = false
+        
+        convenience init() {
+            self.init(frame:CGRectMake(0, 0, 37, 37))
+        }
+        
+        override init(frame: CGRect) {
+            super.init(frame:frame)
+            self.backgroundColor = UIColor.clearColor()
+            self.opaque = false
+            _sf_registerForKVO()
+        }
+        
+        required public init?(coder aDecoder: NSCoder) {
+            super.init(coder:aDecoder)
+        }
+        
+        override public func drawRect(rect: CGRect) {
+            let allRect = self.bounds
+            let circleRect = CGRectInset(allRect, 2.0, 2.0)
+            let context = UIGraphicsGetCurrentContext()
+            
+            let pi = Float(M_PI)
+            if (annular) {
+                // Draw background
+                let  lineWidth: CGFloat = 2.0
+                let processBackgroundPath = UIBezierPath()
+                processBackgroundPath.lineWidth = lineWidth
+                processBackgroundPath.lineCapStyle = .Butt
+                let center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2)
+                let radius = (self.bounds.size.width - lineWidth)/2
+                let startAngle = -(pi / 2) // 90 degrees
+                var endAngle =  2 * pi + startAngle
+                processBackgroundPath.addArcWithCenter(center, radius:radius, startAngle:CGFloat(startAngle), endAngle:CGFloat(endAngle), clockwise: true)
+                backgroundTintColor.set()
+                processBackgroundPath.stroke()
+                // Draw progress
+                let processPath = UIBezierPath()
+                processPath.lineCapStyle = .Square
+                processPath.lineWidth = lineWidth
+                endAngle = progress * 2 * pi + startAngle
+                processPath.addArcWithCenter(center, radius:radius, startAngle:CGFloat(startAngle), endAngle:CGFloat(endAngle), clockwise: true)
+                progressTintColor.set()
+                processPath.stroke()
+            } else {
+                // Draw background
+                progressTintColor.setStroke()
+                backgroundTintColor.setFill()
+                CGContextSetLineWidth(context, 2.0)
+                CGContextFillEllipseInRect(context, circleRect)
+                CGContextStrokeEllipseInRect(context, circleRect)
+                // Draw progress
+                let center = CGPointMake(allRect.size.width / 2, allRect.size.height / 2)
+                let radius = (allRect.size.width - 4) / 2
+                let startAngle = -(pi / 2) // 90 degrees
+                let endAngle = progress * 2 * pi + startAngle
+                progressTintColor.setFill()
+                CGContextMoveToPoint(context, center.x, center.y)
+                CGContextAddArc(context, center.x, center.y, radius, CGFloat(startAngle), CGFloat(endAngle), 0)
+                CGContextClosePath(context)
+                CGContextFillPath(context)
+            }
+        }
+        
+        deinit {
+            _sf_unregisterFromKVO()
+        }
+        
+        // MARK: KVO
+        func _sf_registerForKVO() {
+            for keyPath in self._sf_observableKeypaths() {
+                addObserver(self, forKeyPath:keyPath, options:.New, context:nil)
+            }
+        }
+        
+        func _sf_unregisterFromKVO() {
+            for keyPath in self._sf_observableKeypaths() {
+                removeObserver(self, forKeyPath:keyPath)
+            }
+        }
+        
+        func _sf_observableKeypaths() -> [String] {
+            return ["progressTintColor",
+                "backgroundTintColor",
+                "progress",
+                "annular"]
+        }
+        
+        override public func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+            super.observeValueForKeyPath(keyPath, ofObject:object, change:change, context: context)
+            setNeedsDisplay()
+        }
+    }
 }
 
 /// Provides the general look and feel of the APPLE HUD,
 /// into which the eventual content is inserted.
-class SFEffectView : UIVisualEffectView {
+public class SFEffectView : UIVisualEffectView {
     init() {
         super.init(effect: UIBlurEffect(style: .Light))
         commonInit()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
     }
@@ -593,101 +692,3 @@ class SFEffectView : UIVisualEffectView {
         }
     }
 }
-
-class SFRoundProgressView : UIView {
-    dynamic var progress : Float = 0.0
-    dynamic var progressTintColor = UIColor(white:0.5, alpha:1.0)
-    dynamic var backgroundTintColor = UIColor(white:1.0, alpha:1.0)
-    dynamic var annular : Bool = false
-    
-    convenience init() {
-        self.init(frame:CGRectMake(0, 0, 37, 37))
-    }
-    
-    override init(frame: CGRect) {
-        super.init(frame:frame)
-        self.backgroundColor = UIColor.clearColor()
-        self.opaque = false
-        _sf_registerForKVO()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder:aDecoder)
-    }
-    
-    override func drawRect(rect: CGRect) {
-        let allRect = self.bounds
-        let circleRect = CGRectInset(allRect, 2.0, 2.0)
-        let context = UIGraphicsGetCurrentContext()
-        
-        let pi = Float(M_PI)
-        if (annular) {
-            // Draw background
-            let  lineWidth: CGFloat = 2.0
-            let processBackgroundPath = UIBezierPath()
-            processBackgroundPath.lineWidth = lineWidth
-            processBackgroundPath.lineCapStyle = .Butt
-            let center = CGPointMake(self.bounds.size.width/2, self.bounds.size.height/2)
-            let radius = (self.bounds.size.width - lineWidth)/2
-            let startAngle = -(pi / 2) // 90 degrees
-            var endAngle =  2 * pi + startAngle
-            processBackgroundPath.addArcWithCenter(center, radius:radius, startAngle:CGFloat(startAngle), endAngle:CGFloat(endAngle), clockwise: true)
-            backgroundTintColor.set()
-            processBackgroundPath.stroke()
-            // Draw progress
-            let processPath = UIBezierPath()
-            processPath.lineCapStyle = .Square
-            processPath.lineWidth = lineWidth
-            endAngle = progress * 2 * pi + startAngle
-            processPath.addArcWithCenter(center, radius:radius, startAngle:CGFloat(startAngle), endAngle:CGFloat(endAngle), clockwise: true)
-            progressTintColor.set()
-            processPath.stroke()
-        } else {
-            // Draw background
-            progressTintColor.setStroke()
-            backgroundTintColor.setFill()
-            CGContextSetLineWidth(context, 2.0)
-            CGContextFillEllipseInRect(context, circleRect)
-            CGContextStrokeEllipseInRect(context, circleRect)
-            // Draw progress
-            let center = CGPointMake(allRect.size.width / 2, allRect.size.height / 2)
-            let radius = (allRect.size.width - 4) / 2
-            let startAngle = -(pi / 2) // 90 degrees
-            let endAngle = progress * 2 * pi + startAngle
-            progressTintColor.setFill()
-            CGContextMoveToPoint(context, center.x, center.y)
-            CGContextAddArc(context, center.x, center.y, radius, CGFloat(startAngle), CGFloat(endAngle), 0)
-            CGContextClosePath(context)
-            CGContextFillPath(context)
-        }
-    }
-    
-    deinit {
-        _sf_unregisterFromKVO()
-    }
-    
-    // MARK: KVO
-    func _sf_registerForKVO() {
-        for keyPath in self._sf_observableKeypaths() {
-            self.addObserver(self, forKeyPath:keyPath, options:.New, context:nil)
-        }
-    }
-    
-    func _sf_unregisterFromKVO() {
-        for keyPath in self._sf_observableKeypaths() {
-            self.removeObserver(self, forKeyPath:keyPath)
-        }
-    }
-    
-    func _sf_observableKeypaths() -> [String] {
-        return ["progressTintColor",
-            "backgroundTintColor",
-            "progress",
-            "annular"]
-    }
-    
-    override public func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
-        self.setNeedsDisplay()
-    }
-}
-
